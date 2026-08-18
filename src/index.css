@@ -1,0 +1,664 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark theme (default) — industrial-technical palette */
+    --bg: 8 13 23;
+    --surface: 14 22 37;
+    --surface-2: 18 29 47;
+    --line: 30 44 65;
+    --line-strong: 42 60 90;
+    --ink: 232 237 245;
+    --muted: 140 155 178;
+    --blue: 100 168 255;
+    --orange: 255 155 84;
+    --cyan: 82 216 212;
+    --green: 115 219 156;
+    color-scheme: dark;
+  }
+
+  [data-theme='light'] {
+    --bg: 239 243 248;
+    --surface: 248 251 255;
+    --surface-2: 232 238 247;
+    --line: 205 216 230;
+    --line-strong: 166 183 204;
+    --ink: 16 26 43;
+    --muted: 81 100 123;
+    color-scheme: light;
+  }
+
+  * {
+    border-color: rgb(var(--line) / 1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 92px;
+  }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: rgb(var(--bg) / 1);
+    color: rgb(var(--ink) / 1);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--blue) / 0.28);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--blue) / 0.9);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg) / 1);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line-strong) / 1);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--muted) / 1);
+  }
+}
+
+@layer components {
+  /* ---- Noise overlay: fractal turbulence, 3.5% opacity, full viewport ---- */
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Blueprint grid: 54px lines, faded blue, masked left-to-right ---- */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(rgb(var(--blue) / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--blue) / 0.07) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.25) 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.25) 60%, transparent 100%);
+  }
+
+  /* ---- Hairline frame helper ---- */
+  .hairline {
+    border: 1px solid rgb(var(--line) / 1);
+  }
+
+  .label-mono {
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ---- Orbit rings ---- */
+  .orbit-ring {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px dashed rgb(var(--blue) / 0.5);
+    animation: spin 18s linear infinite;
+  }
+  .orbit-ring-2 {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px dashed rgb(var(--orange) / 0.5);
+    animation: spin-reverse 13s linear infinite;
+  }
+
+  .orbit-core {
+    animation: spin-reverse 6s linear infinite;
+  }
+
+  /* ---- Circuit chip with pins ---- */
+  .chip {
+    position: absolute;
+    background: rgb(var(--surface-2) / 1);
+    border: 1px solid rgb(var(--line-strong) / 1);
+    animation: drift 5s ease-in-out infinite;
+  }
+  .chip::before,
+  .chip::after {
+    content: '';
+    position: absolute;
+    background: rgb(var(--line-strong) / 1);
+  }
+  .chip-green {
+    border-color: rgb(var(--green) / 0.5);
+  }
+  .chip-green::before {
+    left: 8px;
+    top: -6px;
+    width: 1px;
+    height: 6px;
+  }
+  .chip-green::after {
+    right: 8px;
+    top: -6px;
+    width: 1px;
+    height: 6px;
+  }
+  .chip-orange {
+    border-color: rgb(var(--orange) / 0.5);
+  }
+  .chip-orange::before {
+    left: 6px;
+    top: -7px;
+    width: 1px;
+    height: 7px;
+  }
+  .chip-orange::after {
+    right: 6px;
+    top: -7px;
+    width: 1px;
+    height: 7px;
+  }
+
+  /* ---- Pulsing dots ---- */
+  .pulse-dot {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ---- Theme toggle pill ---- */
+  .theme-pill {
+    position: relative;
+    width: 46px;
+    height: 24px;
+    border-radius: 9999px;
+    border: 1px solid rgb(var(--line-strong) / 1);
+    background: rgb(var(--surface-2) / 1);
+    cursor: pointer;
+  }
+  .theme-dot {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    background: rgb(var(--blue) / 1);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+  }
+  [data-theme='light'] .theme-dot {
+    transform: translateX(22px);
+    background: rgb(var(--orange) / 1);
+  }
+
+  /* ---- Terminal window ---- */
+  .term-body {
+    background: #07101e;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #c8d6ea;
+  }
+  [data-theme='light'] .term-body {
+    background: #0a1424;
+    color: #cdd9ea;
+  }
+
+  .term-input {
+    width: 100%;
+    background: transparent;
+    border-bottom: 1px solid rgb(var(--line) / 0.8);
+    color: rgb(var(--ink) / 1);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 8px 4px;
+    transition: border-color 0.2s ease;
+  }
+  .term-input:focus {
+    outline: none;
+    border-bottom-color: rgb(var(--cyan) / 0.9);
+  }
+  .term-input::placeholder {
+    color: rgb(var(--muted) / 0.6);
+  }
+
+  /* ---- Project display ring ---- */
+  .proj-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 1px dashed rgb(var(--project-accent) / 0.6);
+    animation: spin 13s linear infinite;
+  }
+  .proj-ring-2 {
+    position: absolute;
+    inset: 14%;
+    border-radius: 9999px;
+    border: 1px solid rgb(var(--project-accent) / 0.25);
+    animation: spin-reverse 9s linear infinite;
+  }
+
+  .accent-blue {
+    --project-accent: var(--blue);
+  }
+  .accent-orange {
+    --project-accent: var(--orange);
+  }
+  .accent-cyan {
+    --project-accent: var(--cyan);
+  }
+  .accent-green {
+    --project-accent: var(--green);
+  }
+}
+
+@layer utilities {
+  .glow-blue {
+    text-shadow: 0 0 24px rgb(var(--blue) / 0.65);
+  }
+  .glow-accent {
+    filter: drop-shadow(0 0 12px rgb(var(--project-accent) / 0.6));
+  }
+}
+
+/* ---- Keyframes ---- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-6px, -6px);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---- Scroll reveal (driven by IntersectionObserver) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- 3D tilt card ---- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.tilt-card:hover {
+  box-shadow: 0 24px 60px -20px rgb(2 8 23 / 0.7);
+}
+
+/* ---- Floating gradient orbs ---- */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.45;
+  animation: float-orb 16s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes float-orb {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(44px, -34px) scale(1.1);
+  }
+  66% {
+    transform: translate(-34px, 28px) scale(0.92);
+  }
+}
+
+/* ---- Rising particles ---- */
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: rgb(var(--cyan) / 0.8);
+  animation: rise linear infinite;
+  opacity: 0;
+}
+@keyframes rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(-130px);
+    opacity: 0;
+  }
+}
+
+/* ---- Gentle floating bob ---- */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.bob-anim {
+  animation: bob 4s ease-in-out infinite;
+}
+
+/* ---- Scanline sweep across a module ---- */
+.scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--cyan) / 0.85), transparent);
+  animation: scan 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scan {
+  0% {
+    top: 8%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    top: 92%;
+    opacity: 0;
+  }
+}
+
+/* ---- Top shimmer hairline ---- */
+@keyframes shimmer-x {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.shimmer-bar {
+  animation: shimmer-x 3s linear infinite;
+}
+
+/* ---- 3D timeline items (revealed on hover) ---- */
+.tl-item {
+  opacity: 0;
+  transform: perspective(800px) rotateX(-72deg) translateY(22px);
+  transform-origin: top center;
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.65s ease;
+}
+.tl-show .tl-item {
+  opacity: 1;
+  transform: perspective(800px) rotateX(0deg) translateY(0);
+}
+
+/* ---- Timeline rail dot pulse ---- */
+@keyframes tl-drop {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.45;
+  }
+}
+.tl-rail-dot {
+  animation: tl-drop 2.4s ease-in-out infinite;
+}
+
+/* ---- Timeline connector grow ---- */
+.tl-connector {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tl-show .tl-connector {
+  transform: scaleY(1);
+}
+
+/* ---- 3D orbit scene (tilted rings) ---- */
+.orbit-3d {
+  transform-style: preserve-3d;
+  animation: orbit-tilt 12s ease-in-out infinite;
+}
+@keyframes orbit-tilt {
+  0%,
+  100% {
+    transform: rotateX(62deg) rotateZ(0deg);
+  }
+  50% {
+    transform: rotateX(70deg) rotateZ(180deg);
+  }
+}
+
+/* ---- 3D cube spinner ---- */
+.cube3d {
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: cube-spin 12s linear infinite;
+}
+@keyframes cube-spin {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+.cube-face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgb(var(--blue) / 0.6);
+  background: rgb(var(--surface-2) / 0.45);
+  box-shadow: inset 0 0 14px rgb(var(--blue) / 0.25);
+}
+
+/* ---- 3D flip-in entrance ---- */
+@keyframes flip-in {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateX(-55deg) translateY(34px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateX(0deg) translateY(0);
+  }
+}
+.flip-in {
+  animation: flip-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---- 3D hero name: follows cursor in perspective ---- */
+.hero-name-3d {
+  display: inline-block;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(calc(var(--my, 0) * -9deg)) rotateY(calc(var(--mx, 0) * 12deg));
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+}
+.hero-name-3d .name-layer {
+  display: inline-block;
+  transform: translateZ(22px);
+  text-shadow:
+    0 1px 0 rgb(var(--line-strong) / 0.85),
+    0 2px 0 rgb(var(--line-strong) / 0.7),
+    0 3px 0 rgb(var(--line-strong) / 0.5),
+    0 14px 30px rgb(2 8 23 / 0.75);
+}
+
+/* ---- Staggered 3D letter flip ---- */
+@keyframes letter-flip {
+  from {
+    opacity: 0;
+    transform: translateY(0.9em) rotateX(-85deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+  }
+}
+.letter-flip {
+  display: inline-block;
+  transform-origin: top center;
+  animation: letter-flip 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---- Animated progress ring (draws on project switch) ---- */
+.progress-ring {
+  animation: draw-ring 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes draw-ring {
+  from {
+    stroke-dashoffset: var(--ring-full, 553);
+  }
+}
+
+/* ---- Orbiting accent satellite ---- */
+@keyframes orbit-sat {
+  from {
+    transform: rotate(0deg) translateX(110px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(110px) rotate(-360deg);
+  }
+}
+.orbit-sat {
+  animation: orbit-sat 13s linear infinite;
+}
+
+/* ---- Pulsing glow behind a core ---- */
+@keyframes core-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+.core-glow {
+  animation: core-glow 3.2s ease-in-out infinite;
+}
+
+/* Parallax elements read cursor position from --mx / --my */
+.parallax {
+  transform: translate3d(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * 14px), 0);
+  will-change: transform;
+}
+.parallax-soft {
+  transform: translate3d(calc(var(--mx, 0) * -20px), calc(var(--my, 0) * -20px), 0);
+  will-change: transform;
+}
+
+/* Button lift on hover */
+.lift {
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .orbit-ring,
+  .orbit-ring-2,
+  .orbit-core,
+  .chip,
+  .pulse-dot,
+  .proj-ring,
+  .proj-ring-2,
+  .fade-up,
+  .flip-in,
+  .orb,
+  .particle,
+  .bob-anim,
+  .scanline,
+  .shimmer-bar,
+  .core-glow,
+  .orbit-3d,
+  .cube3d,
+  .letter-flip,
+  .progress-ring,
+  .orbit-sat {
+    animation: none;
+  }
+  .hero-name-3d {
+    transform: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .tl-item {
+    opacity: 1;
+    transform: none;
+  }
+  .tl-connector {
+    transform: scaleY(1);
+  }
+  .parallax,
+  .parallax-soft {
+    transform: none;
+  }
+}

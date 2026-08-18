@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #080d17; font-family: Arial, Helvetica, sans-serif;">
+    <div style="max-width: 640px; margin: 0 auto; background-color: #0e1625; border-radius: 16px; overflow: hidden; border: 1px solid #1e2c41;">
+
+      <!-- ===== Banner ===== -->
+      <div style="background: linear-gradient(135deg, #0e1625 0%, #121d2f 100%); padding: 36px 32px; text-align: center; border-bottom: 1px solid #1e2c41;">
+        <div style="display: inline-block; background-color: #64a8ff; color: #080d17; font-size: 22px; font-weight: 900; width: 44px; height: 44px; line-height: 44px; border-radius: 10px; box-shadow: 4px 4px 0 rgba(82, 216, 212, 0.55);">M</div>
+        <h1 style="margin: 16px 0 4px; color: #e8edf5; font-size: 24px; letter-spacing: -0.5px;">New Message — Portfolio Contact</h1>
+        <p style="margin: 0; color: #8c9bb2; font-size: 13px;">monish@terminal // open channel</p>
+      </div>
+
+      <!-- ===== Body ===== -->
+      <div style="padding: 32px;">
+        <!-- Name -->
+        <div style="background-color: #121d2f; border: 1px solid #1e2c41; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;">
+          <div style="color: #64a8ff; font-size: 11px; letter-spacing: 2px; margin-bottom: 6px;">FROM NAME</div>
+          <div style="color: #e8edf5; font-size: 17px; font-weight: 700;">{{from_name}}</div>
+        </div>
+
+        <!-- Email -->
+        <div style="background-color: #121d2f; border: 1px solid #1e2c41; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;">
+          <div style="color: #52d8d4; font-size: 11px; letter-spacing: 2px; margin-bottom: 6px;">REPLY EMAIL</div>
+          <div style="color: #e8edf5; font-size: 15px;"><a href="mailto:{{from_email}}" style="color: #52d8d4; text-decoration: none;">{{from_email}}</a></div>
+        </div>
+
+        <!-- Message -->
+        <div style="background-color: #121d2f; border: 1px solid #1e2c41; border-radius: 12px; padding: 18px 20px;">
+          <div style="color: #ff9b54; font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">MESSAGE</div>
+          <div style="color: #e8edf5; font-size: 15px; line-height: 1.7; white-space: pre-wrap;">{{message}}</div>
+        </div>
+      </div>
+
+      <!-- ===== Footer ===== -->
+      <div style="border-top: 1px solid #1e2c41; padding: 20px 32px; text-align: center;">
+        <p style="margin: 0; color: #51647b; font-size: 12px;">Received via the Open Channel form at monishkumar.dev &middot; MK / 2026</p>
+      </div>
+    </div>
+  </body>
+</html>
